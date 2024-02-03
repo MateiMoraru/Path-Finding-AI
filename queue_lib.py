@@ -19,3 +19,19 @@ class Queue:
     @property
     def pop(self):
         self.queue.pop(0)
+
+
+    @property
+    def len(self):
+        return len(self.queue)
+
+    
+    @property
+    def empty(self):
+        return self.len == 0
+    
+
+    @property
+    def clear(self):
+        self.queue.clear()
+    

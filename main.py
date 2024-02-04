@@ -15,7 +15,7 @@ class PathFinding:
         self.finish_color = '\033[91m'
 
         self.player_pos = (9, 1)
-        self.finish_pos = (6, 9)
+        self.finish_pos = (9, 9)
         
         self.visited = []
         self.moves = -1
@@ -27,22 +27,22 @@ class PathFinding:
     def generate_map(self):
         self.map = [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
-            ["#", " ", "#", "#", " ", " ", " ", " ", " ", " ", "#"],
-            ["#", " ", "#", " ", " ", " ", " ", " ", " ", " ", "#"],
+            ["#", " ", "#", "#", " ", " ", "#", "#", " ", " ", "#"],
+            ["#", " ", "#", " ", " ", " ", " ", "#", " ", " ", "#"],
             ["#", " ", " ", " ", "#", "#", " ", " ", " ", " ", "#"],
             ["#", " ", "#", "#", "#", "#", "#", "#", " ", " ", "#"],
             ["#", " ", "#", "#", " ", "#", " ", " ", " ", " ", "#"],
-            ["#", " ", " ", "#", " ", "#", " ", " ", " ", " ", "#"],
-            ["#", " ", " ", "#", " ", "#", " ", " ", " ", " ", "#"],
+            ["#", " ", " ", "#", " ", "#", " ", "#", "#", " ", "#"],
+            ["#", " ", " ", "#", " ", "#", " ", " ", "#", " ", "#"],
             ["#", " ", " ", "#", "#", "#", "#", " ", "#", " ", "#"],
-            ["#", " ", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
+            ["#", " ", " ", " ", " ", " ", " ", " ", "#", " ", "#"],
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#"]
         ]
 
         self.map[self.player_pos[0]][self.player_pos[1]] = self.player
         self.map[self.finish_pos[0]][self.finish_pos[1]] = self.finish
         for p in self.path:
-            self.map[p[0]][p[1]] = self.player
+            self.map[p[0]][p[1]] = self.attempt
 
         if self.queue.empty:
             self.queue.add([self.player_pos, [], 0])
@@ -107,7 +107,7 @@ def main():
         path_finding.find_neighbors()
         path_finding.generate_map()
     path_finding.draw_map()
-    print(f"Reached final goal within {path_finding.moves} and {round((time.time() - path_finding.start_time) * 1000, 2)}ms")
+    print(f"Reached final goal within {path_finding.moves} steps and {round((time.time() - path_finding.start_time) * 1000, 2)}ms")
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,5 @@
 import time
-from queue_lib import Queue
+from collections import deque
 import os
 
 class PathFinding:
@@ -15,12 +15,12 @@ class PathFinding:
         self.finish_color = '\033[91m'
 
         self.player_pos = (9, 1)
-        self.finish_pos = (9, 9)
+        self.finish_pos = (5, 9)
         
         self.visited = []
         self.moves = -1
         self.path = []
-        self.queue = Queue()
+        self.queue = deque()
 
         self.generate_map()
 
@@ -41,11 +41,14 @@ class PathFinding:
 
         self.map[self.player_pos[0]][self.player_pos[1]] = self.player
         self.map[self.finish_pos[0]][self.finish_pos[1]] = self.finish
+        
+        for e in self.queue:
+            self.map[e[0][0]][e[0][1]] = self.attempt
         for p in self.path:
-            self.map[p[0]][p[1]] = self.attempt
+            self.map[p[0]][p[1]] = self.player
 
-        if self.queue.empty:
-            self.queue.add([self.player_pos, [], 0])
+        if len(self.queue) == 0:
+            self.queue.append([self.player_pos, [], 0])
 
 
     def draw_map(self):
@@ -64,10 +67,12 @@ class PathFinding:
                     prefix = self.player_color
                 print(prefix + value + sufix, end=" ")
             print()
+        print()
 
     
     def find_neighbors(self):
-        for i, el in enumerate(self.queue.queue):
+        self.neighbors = []
+        for el in self.queue:
             x, y = el[0]
             path = el[1]
             moves = el[2]
@@ -84,6 +89,9 @@ class PathFinding:
             if self.map[x][y - 1] != "#":
                 pos = (x, y - 1)
                 self.check_neighbor(pos, path, moves)
+        for neighbor in self.neighbors:
+            self.queue.append(neighbor)
+        self.queue.popleft()
         
 
     def check_neighbor(self, pos, path, moves):
@@ -95,7 +103,7 @@ class PathFinding:
             return
         if pos not in self.visited:
             new_path = path + [pos]
-            self.queue.add((pos, new_path, moves + 1))
+            self.neighbors.append((pos, new_path, moves + 1))
             self.visited.append(pos)
 
 
